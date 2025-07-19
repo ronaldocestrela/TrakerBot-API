@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using TrakerBot.API.Middleware;
+using TrakerBot.Application.Bookmakers.Validators;
 using TrakerBot.Application.Core;
 using TrakerBot.Application.FakeEmail;
 using TrakerBot.Core.Entities;
@@ -22,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfiles).Assembly);
-// builder.Services.AddValidatorsFromAssemblyContaining<CreateExpertValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateBookmakerValidator>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
@@ -42,10 +43,10 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
     opt.User.RequireUniqueEmail = true;
 }).AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
-// builder.Services.AddMediatR(x => {
-//     x.RegisterServicesFromAssemblyContaining<CreateExpertValidator>();
-//     x.AddOpenBehavior(typeof(ValidationBehavior<,>));
-// });
+builder.Services.AddMediatR(x => {
+    x.RegisterServicesFromAssemblyContaining<CreateBookmakerValidator>();
+    x.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 builder.Services.AddControllers(opt =>
 {
@@ -78,8 +79,23 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGroup("api").MapIdentityApi<ApplicationUser>();
-
 app.MapControllers();
+
+app.MapGroup("api").MapIdentityApi<ApplicationUser>();
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+    await context.Database.MigrateAsync();
+    await DbInitializer.SeedData(context, userManager, roleManager);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during migration");
+}
 
 app.Run();

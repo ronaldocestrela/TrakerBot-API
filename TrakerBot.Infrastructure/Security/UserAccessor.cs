@@ -16,8 +16,8 @@ public class UserAccessor(IHttpContextAccessor httpContextAccessor, ApplicationD
         return new UserInfoDto
         {
             Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
+            FirstName = user.FirstName!,
+            LastName = user.LastName!,
             Email = user.Email!,
             ProfilePictureUrl = user.ProfilePictureUrl!,
         };
