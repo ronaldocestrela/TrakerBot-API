@@ -22,8 +22,4 @@
     <ProjectReference Include="../TrakerBot.Persistance/TrakerBot.Persistance.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers/" />
-  </ItemGroup>
-
 </Project>
