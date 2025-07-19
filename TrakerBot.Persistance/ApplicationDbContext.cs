@@ -10,6 +10,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<Bookmaker> Bookmakers { get; set; }
     public DbSet<OriginalLink> OriginalLinks { get; set; }
     public DbSet<Utm> Utms { get; set; }
+    public DbSet<Telegram> Telegrams { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
