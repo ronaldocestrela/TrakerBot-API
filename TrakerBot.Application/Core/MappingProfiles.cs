@@ -1,4 +1,6 @@
 using AutoMapper;
+using TrakerBot.Application.Bookmakers.DTOs;
+using TrakerBot.Core.Entities;
 
 namespace TrakerBot.Application.Core;
 
@@ -6,8 +8,6 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        // Add your mapping configurations here
-        // For example:
-        // CreateMap<SourceEntity, DestinationDto>();
+        CreateMap<CreateBookmakerDto, Bookmaker>().ReverseMap();
     }
 }

@@ -8,4 +8,5 @@ public class ApplicationUser : IdentityUser
     public required string LastName { get; set; }
     public string? ProfilePictureUrl { get; set; }
     public DateTime DateOfBirth { get; set; }
+
 }
