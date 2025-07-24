@@ -59,6 +59,7 @@ Olá! Envie uma mensagem com um domínio ou URL de uma casa de apostas e eu veri
 /start - Mostrar esta mensagem
 /help - Ajuda
 /info - Informações sobre o bot
+/myinfo - Suas informações de conta
     """,
     
     'help': """

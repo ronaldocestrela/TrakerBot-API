@@ -65,6 +65,55 @@ class TelegramBetBot:
             parse_mode='Markdown'
         )
     
+    async def myinfo_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Comando /myinfo - mostra informações da conta do usuário"""
+        try:
+            user = update.effective_user
+            chat = update.effective_chat
+            
+            # Coletar informações do usuário
+            user_info = {
+                'id': user.id,
+                'username': user.username or 'Não definido',
+                'first_name': user.first_name or 'Não informado',
+                'last_name': user.last_name or '',
+                'language_code': user.language_code or 'Não definido',
+                'is_bot': user.is_bot,
+                'is_premium': getattr(user, 'is_premium', False)
+            }
+            
+            # Informações do chat
+            chat_info = {
+                'chat_id': chat.id,
+                'chat_type': chat.type
+            }
+            
+            # Montar mensagem de resposta
+            response = f"""👤 *Suas Informações de Conta*
+
+📋 **Dados Pessoais:**
+• 🆔 **ID:** `{user_info['id']}`
+• 👤 **Username:** @{user_info['username']} 
+• 📝 **Nome:** {user_info['first_name']} {user_info['last_name']}
+• 🌍 **Idioma:** {user_info['language_code']}
+• 🤖 **É Bot:** {'Sim' if user_info['is_bot'] else 'Não'}
+• 💎 **Premium:** {'Sim' if user_info['is_premium'] else 'Não'}
+
+💬 **Informações do Chat:**
+• 🆔 **Chat ID:** `{chat_info['chat_id']}`
+• 📱 **Tipo:** {chat_info['chat_type']}
+
+ℹ️ *Essas informações são obtidas diretamente do Telegram*"""
+            
+            await update.message.reply_text(response, parse_mode='Markdown')
+            
+            # Log da interação
+            logger.info(f"Comando /myinfo executado por {user_info['username']} (ID: {user_info['id']})")
+            
+        except Exception as e:
+            logger.error(f"Erro no comando /myinfo: {e}")
+            await update.message.reply_text("🚫 Erro ao obter informações da conta.")
+    
     async def list_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Comando /list - lista casas de apostas disponíveis"""
         try:
@@ -265,6 +314,7 @@ class TelegramBetBot:
             application.add_handler(CommandHandler("start", self.start_command))
             application.add_handler(CommandHandler("help", self.help_command))
             application.add_handler(CommandHandler("info", self.info_command))
+            application.add_handler(CommandHandler("myinfo", self.myinfo_command))
             application.add_handler(CommandHandler("list", self.list_command))
             application.add_handler(CommandHandler("search", self.search_command))
             

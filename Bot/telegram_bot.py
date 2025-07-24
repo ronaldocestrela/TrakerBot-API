@@ -165,6 +165,7 @@ Olá! Envie uma mensagem com um domínio ou URL de uma casa de apostas e eu veri
 /start - Mostrar esta mensagem
 /help - Ajuda
 /info - Informações sobre o bot
+/myinfo - Suas informações de conta
         """
         await update.message.reply_text(welcome_message, parse_mode='Markdown')
 
@@ -205,6 +206,55 @@ Este bot verifica se casas de apostas estão registradas em nossa base de dados.
 *Versão:* 1.0
         """
         await update.message.reply_text(info_message, parse_mode='Markdown')
+
+    async def myinfo_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Comando /myinfo - mostra informações da conta do usuário"""
+        try:
+            user = update.effective_user
+            chat = update.effective_chat
+            
+            # Coletar informações do usuário
+            user_info = {
+                'id': user.id,
+                'username': user.username or 'Não definido',
+                'first_name': user.first_name or 'Não informado',
+                'last_name': user.last_name or '',
+                'language_code': user.language_code or 'Não definido',
+                'is_bot': user.is_bot,
+                'is_premium': getattr(user, 'is_premium', False)
+            }
+            
+            # Informações do chat
+            chat_info = {
+                'chat_id': chat.id,
+                'chat_type': chat.type
+            }
+            
+            # Montar mensagem de resposta
+            response = f"""👤 *Suas Informações de Conta*
+
+📋 **Dados Pessoais:**
+• 🆔 **ID:** `{user_info['id']}`
+• 👤 **Username:** @{user_info['username']} 
+• 📝 **Nome:** {user_info['first_name']} {user_info['last_name']}
+• 🌍 **Idioma:** {user_info['language_code']}
+• 🤖 **É Bot:** {'Sim' if user_info['is_bot'] else 'Não'}
+• 💎 **Premium:** {'Sim' if user_info['is_premium'] else 'Não'}
+
+💬 **Informações do Chat:**
+• 🆔 **Chat ID:** `{chat_info['chat_id']}`
+• 📱 **Tipo:** {chat_info['chat_type']}
+
+ℹ️ *Essas informações são obtidas diretamente do Telegram*"""
+            
+            await update.message.reply_text(response, parse_mode='Markdown')
+            
+            # Log da interação
+            logger.info(f"Comando /myinfo executado por {user_info['username']} (ID: {user_info['id']})")
+            
+        except Exception as e:
+            logger.error(f"Erro no comando /myinfo: {e}")
+            await update.message.reply_text("🚫 Erro ao obter informações da conta.")
 
     async def handle_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Processa mensagens recebidas"""
@@ -293,6 +343,7 @@ Este bot verifica se casas de apostas estão registradas em nossa base de dados.
             application.add_handler(CommandHandler("start", self.start_command))
             application.add_handler(CommandHandler("help", self.help_command))
             application.add_handler(CommandHandler("info", self.info_command))
+            application.add_handler(CommandHandler("myinfo", self.myinfo_command))
             application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
             
             # Adicionar handler de erro

@@ -35,7 +35,7 @@ Bot/
 - ✅ Extrai domínios automaticamente
 - ✅ Verifica casas de apostas na API
 - ✅ Responde com informações formatadas
-- ✅ Comandos: /start, /help, /info, /list, /search
+- ✅ Comandos: /start, /help, /info, /myinfo, /list, /search
 
 ### 🔍 Extração de Domínios
 - ✅ URLs completas (http/https)
@@ -134,6 +134,7 @@ GET /betting-houses/search?q={q}    # Buscar por termo
 - `/start` - Boas-vindas
 - `/help` - Ajuda
 - `/info` - Informações do bot
+- `/myinfo` - Informações da sua conta
 - `/list` - Listar casas disponíveis
 - `/search bet365` - Buscar casas
 

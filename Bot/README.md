@@ -15,6 +15,7 @@ Um bot do Telegram em Python que recebe mensagens com domínios de casas de apos
 - `/start` - Mensagem de boas-vindas
 - `/help` - Ajuda sobre como usar o bot
 - `/info` - Informações sobre o bot
+- `/myinfo` - Suas informações de conta (ID, username, etc.)
 - `/list` - Lista casas de apostas disponíveis
 - `/search <termo>` - Busca casas de apostas por termo
 
@@ -176,6 +177,24 @@ Bot: 📊 Resultados da Verificação:
 ```
 Usuário: casadesconhecida.com
 Bot: ❌ Casa de apostas 'casadesconhecida' não encontrada na base de dados.
+```
+
+### Informações da Conta
+```
+Usuário: /myinfo
+Bot: 👤 Suas Informações de Conta
+
+     📋 Dados Pessoais:
+     • 🆔 ID: 123456789
+     • 👤 Username: @usuario
+     • 📝 Nome: João Silva
+     • 🌍 Idioma: pt
+     • 🤖 É Bot: Não
+     • 💎 Premium: Não
+
+     💬 Informações do Chat:
+     • 🆔 Chat ID: 123456789
+     • 📱 Tipo: private
 ```
 
 ## Personalização

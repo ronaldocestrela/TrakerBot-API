@@ -182,6 +182,17 @@ Olá! Envie uma mensagem com um domínio ou URL de uma casa de apostas...'''
 1. Envie uma mensagem com o domínio da casa de apostas...'''
         },
         {
+            'command': '/myinfo',
+            'description': 'Mostra informações da sua conta',
+            'example': '''👤 *Suas Informações de Conta*
+
+📋 **Dados Pessoais:**
+• 🆔 **ID:** `123456789`
+• 👤 **Username:** @usuario
+• 📝 **Nome:** João Silva
+• 🌍 **Idioma:** pt'''
+        },
+        {
             'command': '/list',
             'description': 'Lista casas de apostas disponíveis',
             'example': '''📋 *Casas de Apostas Disponíveis* (7 total):

@@ -4,19 +4,41 @@ using TrakerBot.Core.Entities;
 
 namespace TrakerBot.Persistance.Configurations;
 
-public class TelegramConfigurations : IEntityTypeConfiguration<Telegram>
+public class TelegramConfiguration : IEntityTypeConfiguration<Telegram>
 {
     public void Configure(EntityTypeBuilder<Telegram> builder)
     {
-        builder.Property(t => t.TelegramId).IsRequired();
-        builder.HasIndex(t => t.TelegramId).IsUnique();
+        // Primary Key
+        builder.HasKey(t => t.Id);
 
-        builder.Property(t => t.Username).IsRequired();
-        builder.HasIndex(t => t.Username).IsUnique();
-        
+        // Properties configuration
+        builder.Property(t => t.TelegramId)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(t => t.Username)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(t => t.UserId)
+            .IsRequired(false);
+
+        // Relationships
         builder.HasOne(t => t.User)
             .WithMany(u => u.Telegrams)
             .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Table configuration
+        builder.ToTable("Telegrams");
+
+        // Indexes
+        builder.HasIndex(t => t.TelegramId)
+            .IsUnique();
+
+        builder.HasIndex(t => t.Username)
+            .IsUnique();
+
+        builder.HasIndex(t => t.UserId);
     }
 }
